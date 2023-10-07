@@ -1,0 +1,74 @@
+﻿@model WeatherApp.Models.IndexVm
+
+@{
+    ViewData["Title"] = "Home Page";
+    var getCityByCountryIdUrl = Url.Action("GetCityByCountryId", "Home");
+    var getDetailUrl = Url.Action("GetDetailByCountryIdAndCityId", "Home");
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<label class="m-xl-3">Country</label>
+@Html.DropDownListFor(model => model.Country, Model.CountryList, "-select-", new { @class = "form-control" })
+
+<label class="m-xl-3">City</label>
+@Html.DropDownListFor(model => model.City, Model.CityList, "-select-", new { @class = "form-control" })
+
+<hr>
+<div id="Detail"></div>
+<hr>
+
+@section scripts{
+    <script>
+        (function ($, window, document) {
+            $("#Country")
+                .change(function () {
+                    $("#City").html("");
+                    $("#Detail").html("");
+                    $("#City").append(
+                        $("<option></option>")
+                            .attr("value", "")
+                            .html("-select-")
+                    );
+
+                    var selectedCountry = $(this).val();
+                    if (selectedCountry == "") return;
+
+                    $.ajax({
+                        type: "GET",
+                        url: "@getCityByCountryIdUrl",
+                        data: { countryId: selectedCountry },
+                        success: function (data) {
+                            $.each(data.value,
+                                function (index, value) {
+                                    $("#City").append(
+                                        $("<option></option>")
+                                            .attr("value", value.value)
+                                            .html(value.text)
+                                    );
+                                });
+                        },
+                    });
+                });
+
+            $("#City")
+                .change(function () {
+                    debugger;
+                    var selectedCountry = $(Country).val();
+                    var selectedCity = $(this).val();
+                    if (selectedCountry == "" || selectedCity == "") return;
+
+                    $.ajax({
+                        type: "GET",
+                        url: "@getDetailUrl",
+                        data: { countryId: selectedCountry, cityId: selectedCity },
+                        success: function (data) {
+                            $("#Detail").html(data);
+                        },
+                    });
+                });
+        })(jQuery, window, document);
+    </script>
+}

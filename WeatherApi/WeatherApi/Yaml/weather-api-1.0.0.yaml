@@ -1,0 +1,212 @@
+﻿openapi: 3.0.3
+info:
+  title: Weather Api
+  version: 1.0.0
+paths:
+  /v1/country/list:    
+    get:
+      description: Get all country
+      tags:
+        - Country
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+  /v1/city/list:
+    get:
+      description: Get all city based on country id
+      parameters:
+        - name: countryId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: IDN
+      tags:
+        - City
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CityModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+  /v1/Weather:
+    get:
+      description: Get weather data based on city
+      parameters:
+        - name: countryId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: IDN
+        - name: cityId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: JKT
+      tags:
+        - Weather
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorModel'
+components:
+  schemas:
+    CountryModel:
+      type: object
+      properties:
+        Id:
+          maxLength: 3
+          type: string
+          example: IDN
+        Name:
+          maxLength: 500
+          type: string
+          example: Indonesia
+    CityModel:
+      type: object
+      properties:
+        Id:
+          maxLength: 3
+          type: string
+          example: JKT
+        Name:
+          maxLength: 500
+          type: string
+          example: Jakarta
+    WeatherModel:
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          type: string
+          example: Jakarta
+        location:
+          maxLength: 3
+          type: string
+          example: "(Longitude:106.8451,Latitude:-6.2146)"
+        time:
+          maxLength: 500
+          type: integer
+          example: 28800
+        wind:
+          maxLength: 500
+          type: integer
+          example: 8.08
+        visibility:
+          type: number
+          example: 10000
+        skyConditions:
+          maxLength: 500
+          type: string
+          example: Haze
+        temperatureInCelcius:
+          type: string
+          format: decimal
+          example: 25.45
+        temperatureInFahrenheit:
+          type: string
+          format: decimal
+          example: 77.81
+        dewPoint:
+          type: string
+          example: "77.81-77.81"
+        relativeHumidity:
+          type: number
+          example: 88
+        preasure:
+          type: number
+          example: 1012
+    ApiErrorModel:
+      type: object
+      properties:
+        errorMessages:
+          type: array
+          items:
+            type: string
+            example: string
